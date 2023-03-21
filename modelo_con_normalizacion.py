@@ -9,7 +9,7 @@ class Model:
     def __normailize(self, x):
         xp = x
         for i, v in enumerate(x):
-            xp[i] = (v*self.media[i])/self.var[i]
+            xp[i] = (v-self.media[i])/self.var[i]
         return xp
 
     def __error(self, y, x, params):
