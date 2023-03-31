@@ -67,6 +67,12 @@ class Model:
     def solve(self, x):
         return self.model(self.__normailize(x), self.params)
 
+    def __call__(self):
+        print(self.num_params)
+
+    def __repr__(self):
+        return "Hola"
+
 #######################################################################
 
 def sigmoid(z):
@@ -85,6 +91,9 @@ x = np.array([
         ])
 
 ia = Model(3, linear_model, 0.0001, 0.0000001)
+
+ia()
+print(ia)
 
 print(ia.params)
 
