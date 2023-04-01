@@ -22,7 +22,7 @@ test_data = datasets.FashionMNIST(
 
 batch_size = 64
 
-# Create data loaders.
+# Create data loaders
 train_dataloader = DataLoader(training_data, batch_size=batch_size)
 test_dataloader = DataLoader(test_data, batch_size=batch_size)
 
@@ -91,18 +91,43 @@ def test(dataloader, model, loss_fn):
             correct += (pred.argmax(1) == y).type(torch.float).sum().item()
     test_loss /= num_batches
     correct /= size
-    print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+    correct *= 100
+    print(f"Test Error: \n Accuracy: {(correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+    return correct
 
-epochs = 5
-for t in range(epochs):
-    print(f"Epoch {t+1}\n-------------------------------")
+#epochs = 5
+#for t in range(epochs):
+t=0 
+accuracy = 0
+while accuracy < 80:
+    t += 1
+    print(f"Epoch {t}\n-------------------------------")
     train(train_dataloader, model, loss_fn, optimizer)
-    test(test_dataloader, model, loss_fn)
+    accuracy = test(test_dataloader, model, loss_fn)
 print("Done!")
 
-for X, y in test_dataloader:
-    X, y = X.to(device), y.to(device)
-    pred = model(X)
-    print(y)
-    print(pred)
-    break
+import matplotlib.pyplot as plt 
+
+dict = [
+        "Remera",
+        "Pantalon",
+        "Buzo",
+        "Vestido",
+        "Saco",
+        "Ojota",
+        "Swetter",
+        "Zapatilla",
+        "Cartera",
+        "Zapato",
+        ]
+
+with torch.no_grad():
+        for X, y in test_dataloader:
+            X, y = X.to(device), y.to(device)
+            pred = model(X)
+            for i, guess in enumerate(X):
+                print("Pred: ",dict[pred.argmax(1)[i]])
+                print("Era: ", dict[y[i]])
+                plt.imshow(guess.reshape((28,28)), cmap="gray")
+                plt.show()
+            break
